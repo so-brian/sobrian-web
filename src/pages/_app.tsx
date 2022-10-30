@@ -7,6 +7,7 @@ import {
   webLightTheme,
 } from '@fluentui/react-components';
 import type { AppProps } from 'next/app';
+import { SoFooter, SoHeader } from '../components';
 
 type EnhancedAppProps = AppProps & { renderer?: GriffelRenderer };
 
@@ -17,7 +18,9 @@ function MyApp({ Component, pageProps, renderer }: EnhancedAppProps) {
     <RendererProvider renderer={renderer || createDOMRenderer()}>
       <SSRProvider>
         <FluentProvider theme={webLightTheme}>
+          <SoHeader />
           <Component {...pageProps} />
+          <SoFooter />
         </FluentProvider>
       </SSRProvider>
     </RendererProvider>
