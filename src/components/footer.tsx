@@ -1,8 +1,11 @@
 
 export const SoFooter = () => {
     return (
-        <>
-            <p>footer</p>
-        </>
+        <footer style={{
+            // flex: '1',
+            backgroundColor: 'cyan',
+        }}>
+            <p>This is some content in sticky footer</p>
+        </footer>
     );
 }

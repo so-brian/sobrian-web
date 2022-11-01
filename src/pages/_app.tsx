@@ -18,9 +18,20 @@ function MyApp({ Component, pageProps, renderer }: EnhancedAppProps) {
     <RendererProvider renderer={renderer || createDOMRenderer()}>
       <SSRProvider>
         <FluentProvider theme={webLightTheme}>
-          <SoHeader />
-          <Component {...pageProps} />
-          <SoFooter />
+          <div style={{
+            display: 'flex',
+            minHeight: '100vh',
+            flexDirection: 'column',
+          }}>
+            <SoHeader />
+            <div style={{
+              backgroundColor: 'green',
+              flex: '1',
+            }}>
+              <Component {...pageProps} />
+            </div>
+            <SoFooter />
+          </div>
         </FluentProvider>
       </SSRProvider>
     </RendererProvider>

@@ -40,7 +40,9 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head />
-        <body>
+        <body style={{
+          margin: '0',
+        }}>
           <Main />
           <NextScript />
         </body>
