@@ -23,9 +23,8 @@ function MyApp({ Component, pageProps, renderer }: EnhancedAppProps) {
             minHeight: '100vh',
             flexDirection: 'column',
           }}>
-            <SoHeader />
+            <SoHeader isLoggedIn={true} />
             <div style={{
-              backgroundColor: 'green',
               flex: '1',
             }}>
               <Component {...pageProps} />
