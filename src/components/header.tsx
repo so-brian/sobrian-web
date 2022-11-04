@@ -1,11 +1,12 @@
 import { Avatar, Image, makeStyles, tokens } from "@fluentui/react-components";
 import { GuestRegular } from '@fluentui/react-icons';
+import { ThemeUtility } from "../utilities";
 
 import Logo from "../../public/logo.png";
 
 const useStyles = makeStyles({
     header: {
-        backgroundColor: tokens.colorPaletteSeafoamBackground2,
+        backgroundColor: ThemeUtility.getBackgroundColor(),
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -30,7 +31,7 @@ const useStyles = makeStyles({
         marginRight: '20px',
         textDecorationLine: 'none',
         fontWeight: 'bold',
-        color: tokens.colorPaletteSeafoamForeground2,
+        color: ThemeUtility.getForegroundColor(),
         fontSize: '20px',
     },
     userGroup: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles({
         alignItems: 'center',
         paddingRight: '10px',
         fontWeight: 'bold',
-        color: tokens.colorPaletteSeafoamForeground2,
+        color: ThemeUtility.getForegroundColor(),
         fontSize: '20px',
     }
 });
