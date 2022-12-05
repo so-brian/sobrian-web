@@ -26,6 +26,7 @@ function MyApp({ Component, pageProps, renderer }: EnhancedAppProps) {
             <SoHeader isLoggedIn={true} />
             <div style={{
               flex: '1',
+              display: 'flex',
             }}>
               <Component {...pageProps} />
             </div>

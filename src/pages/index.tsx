@@ -1,5 +1,5 @@
 import { Button, makeStyles, shorthands, Title1, tokens } from '@fluentui/react-components';
-import type { NextPage } from 'next';
+import { NextPage } from 'next';
 import Head from 'next/head';
 
 const useStyles = makeStyles({
