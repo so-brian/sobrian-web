@@ -1,4 +1,4 @@
-import { Avatar, Image, makeStyles, tokens } from "@fluentui/react-components";
+import { Avatar, Image, Link, makeStyles, tokens } from "@fluentui/react-components";
 import { GuestRegular } from '@fluentui/react-icons';
 
 import Logo from "../../public/logo.png";
@@ -39,13 +39,13 @@ export const SoFooter = () => {
     const classes = useStyles();
     return (
         <footer className={classes.footer}>
-            <Image className={classes.logo} src={Logo.src} />
+            <Image className={classes.logo} src={Logo.src} alt="" />
 
-            <span className={classes.legalItem}>{`@ ${new Date().getFullYear()}` }</span>
+            <span className={classes.legalItem}>{`@ ${new Date().getFullYear()}`}</span>
 
-            <a className={classes.linkItem} href='/'>Home</a>
-            <a className={classes.linkItem} href='/blog'>Blog</a>
-            <a className={classes.linkItem} href='/about'>About</a>
+            <Link className={classes.linkItem} href='/'>Home</Link>
+            <Link className={classes.linkItem} href='/blog'>Blog</Link>
+            <Link className={classes.linkItem} href='/about'>About</Link>
         </footer>
     );
 }

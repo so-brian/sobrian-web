@@ -1,4 +1,4 @@
-import { Avatar, Image, makeStyles, tokens } from "@fluentui/react-components";
+import { Avatar, Image, Link, makeStyles, tokens } from "@fluentui/react-components";
 import { GuestRegular } from '@fluentui/react-icons';
 import { ThemeUtility } from "../utilities";
 
@@ -51,11 +51,11 @@ export const SoHeader = (props: Record<'isLoggedIn', boolean>) => {
     return (
         <header className={classes.header}>
             <div className={classes.menuContainer}>
-                <Image className={classes.logo} src={Logo.src} />
+                <Image className={classes.logo} src={Logo.src} alt="" />
 
-                <a className={classes.menuItem} href='/'>Home</a>
-                <a className={classes.menuItem} href='/blog'>Blog</a>
-                <a className={classes.menuItem} href='/about'>About</a>
+                <Link className={classes.menuItem} href='/'>Home</Link>
+                <Link className={classes.menuItem} href='/blog'>Blog</Link>
+                <Link className={classes.menuItem} href='/about'>About</Link>
             </div>
 
             <div className={classes.userGroup}>
