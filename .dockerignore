@@ -1,0 +1,9 @@
+# comment
+
+.vscode
+node_modules
+k8s
+.gitigore
+Dockerfile
+LICENSE
+README.md
