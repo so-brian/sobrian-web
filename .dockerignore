@@ -1,9 +1,10 @@
 # comment
 
+.next
 .vscode
 node_modules
-k8s
 .gitigore
 Dockerfile
+manifest.yaml
 LICENSE
 README.md
