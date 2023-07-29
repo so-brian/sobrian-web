@@ -1,8 +1,9 @@
 import { env } from "process";
-import { sha1 } from "./utility";
-import { log } from "console";
+import { WXMsgCrypto, sha1 } from "./utility";
+import { log, time } from "console";
 import { Parser } from "xml2js";
-import { TextMessage } from "./message";
+import { TextMessage, ResponseMessage, EncryptedMessage, EncryptedResponseMessage } from "./message";
+import { Tienne } from "next/font/google";
 
 export async function GET(request: Request) {
     const params = new URL(request.url).searchParams;
@@ -23,21 +24,34 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     const body = await request.text()
-    log(body);
+    const params = new URL(request.url).searchParams;
+    const signature = params.get('signature');
+    const timestamp = params.get('timestamp');
+    const nonce = params.get('nonce');
+    const encrypt_type = params.get('encrypt_type');
+    const msg_signature = params.get('msg_signature');
+
+    if (encrypt_type !== 'aes') {
+        return new Response('success', { status: 403 })
+    }
 
     var parser = new Parser({ explicitArray: false });
-    // display the whole result, otherwise the function stops after depth=2
-    // console.log(util.inspect(result, false, null))
-    // console.dir(result);
-    // console.log('Done');
-    const message = (await parser.parseStringPromise(body)).xml as TextMessage;
-    const content = message.Content;
+    const message = (await parser.parseStringPromise(body)).xml as EncryptedMessage;
+
+
+    const wXMsgCrypto = new WXMsgCrypto(process.env.WECHAT_TOKEN!, process.env.WECHAT_ENCODING_AES_KEY!, process.env.WECHAT_APPID!);
+    var signatureFromBody = wXMsgCrypto.getSignature(timestamp!, nonce!, message.Encrypt);
+    log(signatureFromBody);
+
+    const plainText = wXMsgCrypto.decrypt(message.Encrypt);
+    log(plainText);
+
+    const decriptedMessage = (await parser.parseStringPromise(plainText.message)).xml as TextMessage;
+
+    const content = decriptedMessage.Content;
 
     const response = await fetch('http://4.236.216.222/v1/chat', {
         method: 'POST',
-        // headers: {
-        //     'Accept': 'application/vnd.github.v3+json',
-        // },
         body: JSON.stringify({
             "content": content,
         })
@@ -49,14 +63,17 @@ export async function POST(request: Request) {
 
     const chatDto = await response.json();
 
-    const xml = "<xml>" + "<ToUserName><![CDATA[aas]]></ToUserName>" + "<FromUserName><![CDATA[Brian-7]]></FromUserName>" + "<CreateTime>1689745494</CreateTime>" + "<MsgType><![CDATA[text]]></MsgType>" + "<Content><![CDATA[" + chatDto.data.content + "]]></Content>" + "</xml>";
-    // <xml>
-    //   <ToUserName><![CDATA[toUser]]></ToUserName>
-    //   <FromUserName><![CDATA[fromUser]]></FromUserName>
-    //   <CreateTime>12345678</CreateTime>
-    //   <MsgType><![CDATA[text]]></MsgType>
-    //   <Content><![CDATA[你好]]></Content>
-    // </xml>
+    const responseMessage = new ResponseMessage(decriptedMessage.FromUserName, decriptedMessage.ToUserName, 'text', chatDto.data.content);
+    const responseMessageXML = responseMessage.toXML();
+
+    const timestampResp = Math.ceil(Date.now() / 1000);
+    const nonceResp = Math.random().toString().slice(-9);
+    const encryptedContent = wXMsgCrypto.encrypt(responseMessageXML);
+
+    const signatureResp = wXMsgCrypto.getSignature(timestampResp!.toString(), nonceResp, encryptedContent);
+
+    const encryptedResponseMessage = new EncryptedResponseMessage(encryptedContent, signatureResp, timestampResp, nonceResp);
+    const xml = encryptedResponseMessage.toXML();
 
     return new Response(xml, { status: 200 });
 }
