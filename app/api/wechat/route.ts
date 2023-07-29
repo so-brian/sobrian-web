@@ -1,9 +1,9 @@
 import { env } from "process";
 import { WXMsgCrypto, sha1 } from "./utility";
-import { log, time } from "console";
+import { log } from "console";
 import { Parser } from "xml2js";
 import { TextMessage, ResponseMessage, EncryptedMessage, EncryptedResponseMessage } from "./message";
-import { Tienne } from "next/font/google";
+import { SobrianOpenaiServiceClientImpl } from "../../sobrian-openai-service";
 
 export async function GET(request: Request) {
     const params = new URL(request.url).searchParams;
@@ -50,30 +50,22 @@ export async function POST(request: Request) {
 
     const content = decriptedMessage.Content;
 
-    const response = await fetch('http://4.236.216.222/v1/chat', {
-        method: 'POST',
-        body: JSON.stringify({
-            "content": content,
-        })
-    });
+    try {
+        const responseContent = await new SobrianOpenaiServiceClientImpl().chat(content);
+        const responseMessage = new ResponseMessage(decriptedMessage.FromUserName, decriptedMessage.ToUserName, 'text', responseContent);
+        const responseMessageXML = responseMessage.toXML();
 
-    if (response.status !== 200) {
+        const timestampResp = Math.ceil(Date.now() / 1000);
+        const nonceResp = Math.random().toString().slice(-9);
+        const encryptedContent = wXMsgCrypto.encrypt(responseMessageXML);
+
+        const signatureResp = wXMsgCrypto.getSignature(timestampResp!.toString(), nonceResp, encryptedContent);
+
+        const encryptedResponseMessage = new EncryptedResponseMessage(encryptedContent, signatureResp, timestampResp, nonceResp);
+        const xml = encryptedResponseMessage.toXML();
+
+        return new Response(xml, { status: 200 });
+    } catch (error) {
         return new Response('Invalid response', { status: 500 })
     }
-
-    const chatDto = await response.json();
-
-    const responseMessage = new ResponseMessage(decriptedMessage.FromUserName, decriptedMessage.ToUserName, 'text', chatDto.data.content);
-    const responseMessageXML = responseMessage.toXML();
-
-    const timestampResp = Math.ceil(Date.now() / 1000);
-    const nonceResp = Math.random().toString().slice(-9);
-    const encryptedContent = wXMsgCrypto.encrypt(responseMessageXML);
-
-    const signatureResp = wXMsgCrypto.getSignature(timestampResp!.toString(), nonceResp, encryptedContent);
-
-    const encryptedResponseMessage = new EncryptedResponseMessage(encryptedContent, signatureResp, timestampResp, nonceResp);
-    const xml = encryptedResponseMessage.toXML();
-
-    return new Response(xml, { status: 200 });
 }

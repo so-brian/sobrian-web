@@ -1,1 +1,1 @@
-export * from './text_message'
+export * from './text_message';
