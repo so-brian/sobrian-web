@@ -21,9 +21,11 @@
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6",
+    "uuid": "^9.0.0",
     "xml2js": "^0.6.0"
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.2",
     "@types/xml2js": "^0.4.11",
     "daisyui": "^3.5.0"
   }
