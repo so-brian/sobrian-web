@@ -4,6 +4,7 @@ import { log } from "console";
 import { Parser } from "xml2js";
 import { TextMessage, ResponseMessage, EncryptedMessage, EncryptedResponseMessage } from "./message";
 import { SobrianOpenaiServiceClientImpl } from "../../sobrian-openai-service";
+import { v4 as uuidv4 } from 'uuid';
 
 export async function GET(request: Request) {
     const params = new URL(request.url).searchParams;
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
     const content = decriptedMessage.Content;
 
     try {
-        const responseContent = await new SobrianOpenaiServiceClientImpl().chat(content);
+        const responseContent = await new SobrianOpenaiServiceClientImpl(uuidv4()).chat(content);
         const responseMessage = new ResponseMessage(decriptedMessage.FromUserName, decriptedMessage.ToUserName, 'text', responseContent);
         const responseMessageXML = responseMessage.toXML();
 
