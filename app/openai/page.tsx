@@ -5,10 +5,10 @@ import { SobrianOpenaiServiceClientImpl } from "../sobrian-openai-service";
 import { Dialogue, Message } from "./models";
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image'
+import toast, { Toaster } from 'react-hot-toast';
 
 // `app/openai/page.tsx` is the UI for the `/` URL
 export default function Page() {
-    console.log('rendering page');
     const [message, setMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [dialogue] = useState({
@@ -26,16 +26,16 @@ export default function Page() {
         dialogue.messages.push({ from: 'user', content: message, time: new Date() } as Message);
         try {
             const response = await client.chat(message);
-            console.log('the response is: ', response);
             dialogue.messages.push({ from: 'bot', content: response, time: new Date() } as Message);
         } catch (error) {
-            console.log(error);
+            toast.error('error chating with the bot!');
         }
         setIsLoading(false);
     }
 
     return (
         <div className="flex flex-col grow justify-between">
+            <Toaster position="top-right" />
             <div className="flex flex-col">
                 {dialogue.messages.map((message, index) =>
                     message.from === 'user' ?

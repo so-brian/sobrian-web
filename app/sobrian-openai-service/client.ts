@@ -20,7 +20,6 @@ export class SobrianOpenaiServiceClientImpl implements SobrianOpenaiServiceClien
             'sessionId': this.sessionId,
             'content': content,
         });
-        console.log(body);
         const response = await fetch('https://apim.sobrian.net/openai/v1/chat', {
             method: 'POST',
             body: body
