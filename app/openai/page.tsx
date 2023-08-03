@@ -6,6 +6,8 @@ import { Dialogue, Message } from "./models";
 import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast';
+import { remark } from 'remark';
+import remarkHtml from 'remark-html';
 
 // `app/openai/page.tsx` is the UI for the `/` URL
 export default function Page() {
@@ -65,7 +67,9 @@ export default function Page() {
                                 {message.from}
                                 <time className="text-xs opacity-50"> {message.time.toLocaleTimeString()}</time>
                             </div>
-                            <div className="chat-bubble chat-bubble-info">{message.content}</div>
+                            <div className="chat-bubble chat-bubble-info">
+                                <div dangerouslySetInnerHTML={{ __html: remark().use(remarkHtml).processSync(message.content).toString() }} />
+                            </div>
                             <div className="chat-footer opacity-50">
                                 {dialogue.sessionId}
                             </div>
