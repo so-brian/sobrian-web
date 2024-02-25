@@ -2,13 +2,8 @@ export interface SobrianOpenaiServiceClient {
     chat: (content: string) => Promise<string>;
 }
 
-interface ChatDtoData {
-    content: string;
-    sessionId: string;
-}
-
 interface ChatDto {
-    data: ChatDtoData;
+    data: string;
     message: string;
 }
 
@@ -17,21 +12,24 @@ export class SobrianOpenaiServiceClientImpl implements SobrianOpenaiServiceClien
 
     async chat(content: string): Promise<string> {
         const body = JSON.stringify({
-            'sessionId': this.sessionId,
-            'content': content,
+            'message': content,
         });
-        const response = await fetch('https://apim.sobrian.net/openai/v1/chat', {
+        const requestOptions = {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: body
-        });
+        };
+        const url = `https://apim.sobrian.net/openai/openai/chat/${this.sessionId}`;
+        const response = await fetch(url, requestOptions);
 
-        if (response.status !== 200) {
+        if (response.status !== 201) {
             throw new Error('Invalid response');
         }
 
         const json = await response.json() as ChatDto;
 
-
-        return json.data.content;
+        return json.data;
     }
 }
