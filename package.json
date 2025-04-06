@@ -3,33 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/node": "20.4.2",
-    "@types/react": "18.2.15",
-    "@types/react-dom": "18.2.7",
-    "autoprefixer": "10.4.14",
-    "eslint": "8.45.0",
-    "eslint-config-next": "13.4.10",
-    "next": "13.4.10",
-    "postcss": "8.4.26",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-hot-toast": "^2.4.1",
-    "remark": "^14.0.3",
-    "remark-html": "^15.0.2",
-    "tailwindcss": "3.3.3",
-    "typescript": "5.1.6",
-    "uuid": "^9.0.0",
-    "xml2js": "^0.6.0"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next": "15.2.4"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.2",
-    "@types/xml2js": "^0.4.11",
-    "daisyui": "^3.5.0"
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.4",
+    "@eslint/eslintrc": "^3"
   }
 }
