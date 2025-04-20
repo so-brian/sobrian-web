@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "./components/header";
+import Footer from "./components/footer";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -24,9 +24,9 @@ export default function RootLayout ({
   children: React.ReactNode;
 }>) {
   return (
-<html lang="en">
+    <html lang="en">
       <body className="flex flex-col min-h-screen">
-       <Header />
+        <Header />
 
         <main className="flex-grow container mx-auto px-4 py-6">
           {children}
