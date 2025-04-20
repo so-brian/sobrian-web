@@ -18,7 +18,7 @@ export default function Page () {
     setMessages((prevMessages) => {
       const newMessage = new Message(
         dialogId,
-        new MessageSender('user', 'user', '/user-avatar.png'),
+        new MessageSender('user', 'user', '/avatars/user.png'),
         input,
         new Date(),
       );
@@ -50,8 +50,8 @@ export default function Page () {
 
   const dialogId = uuid();
   const emptyMessages: Message[] = [
-    new Message(dialogId, new MessageSender('user', 'user', '/user-avatar.png'), 'Hello', new Date()),
-    new Message(dialogId, new MessageSender('ai', 'ai', '/user-avatar.png'), `A paragraph with *emphasis* and **strong importance**.
+    new Message(dialogId, new MessageSender('user', 'user', '/avatars/user.png'), 'Hello', new Date()),
+    new Message(dialogId, new MessageSender('ai', 'ai', '/avatars/ai.png'), `A paragraph with *emphasis* and **strong importance**.
 
 > A block quote with ~strikethrough~ and a URL: https://reactjs.org.
 
