@@ -10,10 +10,15 @@ import { v4 as uuid } from 'uuid';
 
 export default function Page () {
 
-  function sendMessage (text: string) {
+  let responseId: string | null = null;
+  const dialogId = uuid();
+  const emptyMessages: Message[] = [];
+  const [messages, setMessages] = useState(emptyMessages);
+  const [input, setInput] = useState('');
+
+  async function sendMessage (text: string) {
     console.log('Sending message:', text);
 
-    // Here you would typically call a function to send the message
     setInput('');
     setMessages((prevMessages) => {
       const newMessage = new Message(
@@ -24,6 +29,33 @@ export default function Page () {
       );
       return [...prevMessages, newMessage];
     });
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, previousResponseId: responseId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch response from server');
+      }
+
+      const data = await response.json();
+      responseId = data.id;
+
+      setMessages((prevMessages) => {
+        const newMessage = new Message(
+          dialogId,
+          new MessageSender('ai', 'ai', '/avatars/ai.png'),
+          data.outputText,
+          new Date(),
+        );
+        return [...prevMessages, newMessage];
+      });
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   }
 
   function onInputChanged (e: React.ChangeEvent<HTMLInputElement>) {
@@ -48,26 +80,6 @@ export default function Page () {
     sendMessage(input);
   }
 
-  const dialogId = uuid();
-  const emptyMessages: Message[] = [
-    new Message(dialogId, new MessageSender('user', 'user', '/avatars/user.png'), 'Hello', new Date()),
-    new Message(dialogId, new MessageSender('ai', 'ai', '/avatars/ai.png'), `A paragraph with *emphasis* and **strong importance**.
-
-> A block quote with ~strikethrough~ and a URL: https://reactjs.org.
-
-[Duck Duck Go](https://duckduckgo.com)
-
-* Lists
-* [ ] todo
-* [x] done
-
-\`\`\`javascript
-console.log("Hello, world!");
-\`\`\`
-`, new Date()),
-  ];
-  const [messages, setMessages] = useState(emptyMessages);
-  const [input, setInput] = useState('');
 
   return (
     <div className="flex flex-col h-screen">
